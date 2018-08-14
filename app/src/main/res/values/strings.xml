@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">ShopBackQuiz</string>
     <string name="title_user_detail">User Detail</string>
+
+    <string name="userlist_activity_loading">Loading ...</string>
 </resources>

@@ -1,5 +1,6 @@
 package idv.chauyan.shopbackquiz
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import idv.chauyan.shopbackquiz.model.UserProfile
+import idv.chauyan.shopbackquiz.repository.NetworkRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlinx.android.synthetic.main.user_list.*
 import kotlinx.android.synthetic.main.user_list_content.view.*
@@ -22,6 +27,10 @@ class UserListActivity : AppCompatActivity() {
 
     // check if we need to show two fragments at the same time for tablet devices
     private var twoPane: Boolean = false
+    private var comDisposable: CompositeDisposable = CompositeDisposable()
+
+
+    private lateinit var progess: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +56,35 @@ class UserListActivity : AppCompatActivity() {
             twoPane = true
         }
 
-        setupRecyclerView(user_list)
+        progess = ProgressDialog(this)
+        progess.setMessage(getString(R.string.userlist_activity_loading))
+        progess.setCancelable(false)
+        progess.show()
+
+
+        val respository = NetworkRepository.getInstance()
+        comDisposable.add(
+            respository
+                    .getUsers()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        result ->
+                        setupRecyclerView(user_list)
+
+                        progess.dismiss()
+                    }, {
+                        error ->
+                        error.printStackTrace()
+
+                        progess.dismiss()
+                    })
+        )
+    }
+
+    override fun onDestroy() {
+        comDisposable.clear()
+        super.onDestroy()
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
