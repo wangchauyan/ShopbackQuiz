@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import idv.chauyan.shopbackquiz.model.UserProfile
 import idv.chauyan.shopbackquiz.repository.NetworkRepository
@@ -128,8 +129,8 @@ class UserListActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = values[position]
-            holder.idView.text = item.id
-            holder.contentView.text = item.content
+            holder.userName.text = item.id
+            holder.userRole.text = item.content
 
             with(holder.itemView) {
                 tag = item
@@ -140,8 +141,9 @@ class UserListActivity : AppCompatActivity() {
         override fun getItemCount() = values.size
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val idView: TextView = view.id_text
-            val contentView: TextView = view.content
+            val userAvatar: ImageView = view.id_avatar
+            val userName: TextView = view.id_name
+            val userRole: TextView = view.id_role
         }
     }
 }
