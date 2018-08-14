@@ -12,8 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import idv.chauyan.shopbackquiz.model.UserProfile
+import idv.chauyan.shopbackquiz.model.User
 import idv.chauyan.shopbackquiz.repository.NetworkRepository
+import idv.chauyan.shopbackquiz.views.CircleImageView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -70,8 +71,8 @@ class UserListActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        _ ->
-                        setupRecyclerView(user_list)
+                        result ->
+                        setupRecyclerView(user_list, result)
 
                         progess.dismiss()
                     }, {
@@ -88,12 +89,12 @@ class UserListActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = UserListAdapter(this, UserProfile.ITEMS, twoPane)
+    private fun setupRecyclerView(recyclerView: RecyclerView, data: List<User>) {
+        recyclerView.adapter = UserListAdapter(this, data, twoPane)
     }
 
     class UserListAdapter(private val parentActivity: UserListActivity,
-                          private val values: List<UserProfile.User>,
+                          private val values: List<User>,
                           private val twoPane: Boolean) :
             RecyclerView.Adapter<UserListAdapter.UserView>() {
 
@@ -122,11 +123,15 @@ class UserListActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: UserView, position: Int) {
             val item = values[position]
-            holder.userName.text = item.id
-            holder.userRole.text = item.content
+            holder.userName.text = item.login
+            (holder.userAvatar as CircleImageView).setImageURL(item.avatar_url)
+
+            if (!item.site_admin)
+                holder.userRole.visibility = View.GONE
+            else
+                holder.userRole.visibility = View.VISIBLE
 
             with(holder.itemView) {
-                tag = item
                 setOnClickListener(onClickListener)
             }
         }

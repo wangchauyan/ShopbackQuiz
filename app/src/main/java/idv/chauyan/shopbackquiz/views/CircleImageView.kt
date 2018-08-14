@@ -5,6 +5,8 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import com.squareup.picasso.Picasso
+import idv.chauyan.shopbackquiz.R
 
 
 class CircleImageView : android.support.v7.widget.AppCompatImageView {
@@ -24,6 +26,15 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+
+    fun setImageURL(url:String) {
+        Picasso.get()
+                .load(url)
+                .placeholder(R.drawable.place_holder)
+                .error(R.drawable.place_holder)
+                .into(this)
+        invalidate()
+    }
 
     override fun onDraw(canvas: Canvas?) {
         //super.onDraw(canvas)
