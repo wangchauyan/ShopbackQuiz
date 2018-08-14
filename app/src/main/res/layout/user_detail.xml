@@ -46,6 +46,7 @@
         android:layout_height="100dp"
         android:layout_above="@+id/id_user_name"
         android:layout_centerHorizontal="true"
+        android:src="@drawable/place_holder"
         />
     <include
         android:id="@+id/user_profile"
