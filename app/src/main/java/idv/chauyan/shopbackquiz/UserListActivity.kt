@@ -89,13 +89,13 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, UserProfile.ITEMS, twoPane)
+        recyclerView.adapter = UserListAdapter(this, UserProfile.ITEMS, twoPane)
     }
 
-    class SimpleItemRecyclerViewAdapter(private val parentActivity: UserListActivity,
-                                        private val values: List<UserProfile.User>,
-                                        private val twoPane: Boolean) :
-            RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+    class UserListAdapter(private val parentActivity: UserListActivity,
+                          private val values: List<UserProfile.User>,
+                          private val twoPane: Boolean) :
+            RecyclerView.Adapter<UserListAdapter.UserView>() {
 
         private val onClickListener: View.OnClickListener
 
@@ -121,13 +121,13 @@ class UserListActivity : AppCompatActivity() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserView {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.user_list_content, parent, false)
-            return ViewHolder(view)
+            return UserView(view)
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: UserView, position: Int) {
             val item = values[position]
             holder.userName.text = item.id
             holder.userRole.text = item.content
@@ -140,7 +140,7 @@ class UserListActivity : AppCompatActivity() {
 
         override fun getItemCount() = values.size
 
-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        inner class UserView(view: View) : RecyclerView.ViewHolder(view) {
             val userAvatar: ImageView = view.id_avatar
             val userName: TextView = view.id_name
             val userRole: TextView = view.id_role
