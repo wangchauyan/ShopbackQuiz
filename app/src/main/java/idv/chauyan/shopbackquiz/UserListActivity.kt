@@ -42,7 +42,7 @@ class UserListActivity : AppCompatActivity() {
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Email me if you have any questions", Snackbar.LENGTH_LONG)
-                    .setAction("Email", { view ->
+                    .setAction("Email", { _ ->
                         val emailIntent = Intent(Intent.ACTION_SENDTO)
                         emailIntent.data = Uri.parse("mailto:") // only email apps should handle this
                         emailIntent.putExtra(Intent.EXTRA_SUBJECT,"Questions about this app...")
@@ -70,7 +70,7 @@ class UserListActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        result ->
+                        _ ->
                         setupRecyclerView(user_list)
 
                         progess.dismiss()
@@ -101,21 +101,14 @@ class UserListActivity : AppCompatActivity() {
 
         init {
             onClickListener = View.OnClickListener { v ->
-                val item = v.tag as UserProfile.User
                 if (twoPane) {
-                    val fragment = UserDetailFragment().apply {
-                        arguments = Bundle().apply {
-                            putString(UserDetailFragment.ARG_ITEM_ID, item.id)
-                        }
-                    }
+                    val fragment = UserDetailFragment()
                     parentActivity.supportFragmentManager
                             .beginTransaction()
                             .replace(R.id.user_detail_container, fragment)
                             .commit()
                 } else {
-                    val intent = Intent(v.context, UserDetailActivity::class.java).apply {
-                        putExtra(UserDetailFragment.ARG_ITEM_ID, item.id)
-                    }
+                    val intent = Intent(v.context, UserDetailActivity::class.java)
                     v.context.startActivity(intent)
                 }
             }
