@@ -31,9 +31,6 @@ class UserListActivity : AppCompatActivity() {
     private var twoPane: Boolean = false
     private var comDisposable: CompositeDisposable = CompositeDisposable()
 
-
-    private lateinit var progess: ProgressDialog
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_list)
@@ -58,7 +55,7 @@ class UserListActivity : AppCompatActivity() {
             twoPane = true
         }
 
-        progess = ProgressDialog(this)
+        val progess = ProgressDialog(this)
         progess.setMessage(getString(R.string.userlist_activity_loading))
         progess.setCancelable(false)
         progess.show()

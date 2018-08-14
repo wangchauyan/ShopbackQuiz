@@ -31,7 +31,6 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
         Picasso.get()
                 .load(url)
                 .placeholder(R.drawable.place_holder)
-                .error(R.drawable.place_holder)
                 .into(this)
         invalidate()
     }
