@@ -16,8 +16,10 @@ import kotlinx.android.synthetic.main.user_detail_more.view.*
 
 class UserDetailFragment : Fragment() {
 
-    private var comDisposable: CompositeDisposable = CompositeDisposable()
     private var queryUserName: String? = null
+
+    private val comDisposable: CompositeDisposable = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

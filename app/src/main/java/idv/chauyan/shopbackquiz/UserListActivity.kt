@@ -1,9 +1,9 @@
 package idv.chauyan.shopbackquiz
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -32,7 +32,10 @@ class UserListActivity : AppCompatActivity() {
     // check if we need to show two fragments at the same time for tablet devices
     private var twoPane: Boolean = false
     private var loadMore: Boolean = false
-    private var comDisposable: CompositeDisposable = CompositeDisposable()
+    private var since: Int = 0
+
+    private val per_page: Int = 20
+    private val comDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,11 +76,17 @@ class UserListActivity : AppCompatActivity() {
                 val totalItems = (recyclerView.layoutManager as LinearLayoutManager).itemCount
                 val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
 
-                if (!loadMore && totalItems <= lastVisibleItem+5) {
-                    // need load more
-                    (user_list.adapter as UserListAdapter).showLoadingItem()
+
+                if (!loadMore && totalItems <= lastVisibleItem+1) {
+                    loadMore = true
+
+                    Handler().post {
+                        (user_list.adapter as UserListAdapter).showLoadingItem()
+                    }
+                    Handler().post {
+                        queryUserList(false)
+                    }
                 }
-                loadMore = true
             }
         })
 
@@ -90,10 +99,10 @@ class UserListActivity : AppCompatActivity() {
             // tablet devices
             twoPane = true
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
+        /**
+         * start getting first page - since = 0
+         */
         queryUserList(false)
     }
 
@@ -104,43 +113,33 @@ class UserListActivity : AppCompatActivity() {
 
     private fun queryUserList(bRefresh:Boolean) {
 
-        var progess:ProgressDialog? = null
-        if (!bRefresh) {
-            progess = ProgressDialog(this)
-            progess.setMessage(getString(R.string.userlist_activity_loading))
-            progess.setCancelable(false)
-            progess.show()
-        }
-
-
-
         /**
          * query user list from github
          */
         val respository = NetworkRepository.getInstance()
         comDisposable.add(
                 respository
-                        .getUsers(0, 10)
+                        .getUsers(since, per_page)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe({
                             result ->
 
+                            since += per_page
                             (user_list.adapter as UserListAdapter).setupUsers(result)
 
-                            if (!bRefresh)
-                                progess!!.dismiss()
-                            else
+                            if (bRefresh)
                                 refresh.isRefreshing = false
 
+                            loadMore = false
                         }, {
                             error ->
                             error.printStackTrace()
+                            (user_list.adapter as UserListAdapter).dismissLoadingItem()
 
-                            if (!bRefresh)
-                                progess!!.dismiss()
-                            else
+                            if (bRefresh)
                                 refresh.isRefreshing = false
+                            loadMore = false
                         })
         )
     }
@@ -206,19 +205,22 @@ class UserListActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
             if (holder is UserView) {
-                val item = userList!![position]
-                holder.userName.text = item.login
-                holder.userAvatar.setImageURL(item.avatar_url)
+                userList?.let {
+                    val item = it[position]
+                    holder.userName.text = item.login
+                    holder.userAvatar.setImageURL(item.avatar_url)
 
-                if (!item.site_admin)
-                    holder.userRole.visibility = View.GONE
-                else
-                    holder.userRole.visibility = View.VISIBLE
+                    if (!item.site_admin)
+                        holder.userRole.visibility = View.GONE
+                    else
+                        holder.userRole.visibility = View.VISIBLE
 
-                with(holder.itemView) {
-                    tag = item
-                    setOnClickListener(onClickListener)
+                    with(holder.itemView) {
+                        tag = item
+                        setOnClickListener(onClickListener)
+                    }
                 }
+
             }
             else if (holder is LoadingView){
                 holder.loading.isIndeterminate = true
@@ -249,6 +251,9 @@ class UserListActivity : AppCompatActivity() {
 
         fun setupUsers(data: List<User>) {
             userList?.let {
+                // remove loading item data
+                if (it[it.lastIndex].loadingMore)
+                    it.removeAt(it.lastIndex)
                 it.addAll(data)
             } ?: kotlin.run {
                 userList = ArrayList(data)
@@ -257,6 +262,9 @@ class UserListActivity : AppCompatActivity() {
             notifyDataSetChanged()
         }
 
+        /**
+         * show loading item
+         */
         fun showLoadingItem() {
             userList?.let {
                 val loadingItem = User("", "", false, true)
@@ -265,9 +273,12 @@ class UserListActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * dismiss loading item
+         */
         fun dismissLoadingItem() {
             userList?.let {
-                it.removeAt(it.lastIndex)
+                it.removeAt(it.size-1)
                 notifyItemRemoved(it.size)
             }
         }
