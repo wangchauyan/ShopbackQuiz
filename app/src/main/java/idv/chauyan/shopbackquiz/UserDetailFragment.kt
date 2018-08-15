@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import idv.chauyan.shopbackquiz.model.UserDetail
 import idv.chauyan.shopbackquiz.repository.NetworkRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -19,17 +20,15 @@ class UserDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.user_detail, container, false)
-
-        return rootView
+        return inflater.inflate(R.layout.user_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        user_location.text2.visibility = View.GONE
-        user_link.text2.visibility = View.GONE
+        user_profile.image.setImageResource(R.drawable.user_detail_login)
+        user_location.image.setImageResource(R.drawable.user_detail_location)
+        user_link.image.setImageResource(R.drawable.user_detail_blog)
 
         close.setOnClickListener { _ ->
             activity?.finish()
@@ -54,7 +53,7 @@ class UserDetailFragment : Fragment() {
                         .subscribeOn(Schedulers.io())
                         .subscribe({
                             result ->
-                            println(result.blog)
+                            setupUserDetail(result)
 
                             progess.dismiss()
                         }, {
@@ -64,5 +63,23 @@ class UserDetailFragment : Fragment() {
                             progess.dismiss()
                         })
         )
+    }
+
+
+    fun setupUserDetail(userdetail:UserDetail) {
+
+
+        user_avatar.setImageURL(userdetail.avatar_url)
+        user_name.text = userdetail.login
+        bio.text = userdetail.bio
+
+        user_profile.text1.text = userdetail.login
+        if (userdetail.site_admin)
+            user_profile.text2.visibility = View.VISIBLE
+        else
+            user_profile.text2.visibility = View.GONE
+
+        user_location.text1.text = userdetail.location
+        user_link.text1.text = userdetail.blog
     }
 }

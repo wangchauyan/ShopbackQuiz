@@ -20,33 +20,34 @@
         android:layout_margin="20dp"
         />
     <TextView
-        android:id="@+id/id_bio"
+        android:id="@+id/bio"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_above="@id/id_central_line"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
+        android:gravity="center"
         android:lines="20"
         />
     <TextView
-        android:id="@+id/id_user_name"
+        android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_above="@+id/id_bio"
+        android:layout_above="@+id/bio"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
         />
     <idv.chauyan.shopbackquiz.views.CircleImageView
+        android:id="@+id/user_avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_above="@+id/id_user_name"
+        android:layout_above="@+id/user_name"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/place_holder"
         />
     <include
         android:id="@+id/user_profile"

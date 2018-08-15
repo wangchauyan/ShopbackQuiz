@@ -7,10 +7,10 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_centerVertical="true"
         />
     <LinearLayout
@@ -25,7 +25,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:text="test"
             android:textSize="22sp"
             android:textStyle="bold"
             android:autoLink="all"
@@ -40,6 +39,7 @@
             android:textStyle="bold"
             android:textColor="#ffffff"
             android:gravity="center"
+            android:visibility="gone"
             android:background="@drawable/rounded_textbg"
             />
     </LinearLayout>
