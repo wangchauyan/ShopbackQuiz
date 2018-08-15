@@ -22,6 +22,12 @@ Following the Udacity commit style [Commit Style](http://udacity.github.io/git-s
 
 See also the list of [contributor](https://github.com/wangchauyan/ShopbackQuiz/contributors) who participated in this project.
 
+
+## Github Issues
+
+- if the pagination field - per_page = 5, you will see so many duplicated data, for example, page3/4
+
+
 ## License
 
 This project is licensed under the MIT License - see the [License.md](License.md) file for details
