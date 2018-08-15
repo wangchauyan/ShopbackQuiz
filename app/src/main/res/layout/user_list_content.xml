@@ -25,7 +25,6 @@
             android:layout_weight="1"
             android:layout_marginTop="10dp"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:text="test"
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center_vertical"

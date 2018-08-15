@@ -8,6 +8,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface GithubApiService {
@@ -16,7 +17,7 @@ interface GithubApiService {
      * get user list from github
      */
     @GET("users")
-    fun users(): Observable<List<User>>
+    fun users(@Query("since") since:Int, @Query("per_page") per_page:Int): Observable<List<User>>
 
     /**
      * query user detail information from github by using an exact user name

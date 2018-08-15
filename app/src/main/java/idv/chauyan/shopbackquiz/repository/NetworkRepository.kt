@@ -10,8 +10,8 @@ class RetrofitRepository(val apiService : GithubApiService) {
     /**
      * outside api - get user list
      */
-    fun getUsers() : Observable<List<User>> {
-        return apiService.users()
+    fun getUsers(since:Int, per_page:Int) : Observable<List<User>> {
+        return apiService.users(since, per_page)
     }
 
     /**
