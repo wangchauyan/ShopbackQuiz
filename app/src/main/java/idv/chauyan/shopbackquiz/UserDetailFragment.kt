@@ -17,6 +17,16 @@ import kotlinx.android.synthetic.main.user_detail_more.view.*
 class UserDetailFragment : Fragment() {
 
     private var comDisposable: CompositeDisposable = CompositeDisposable()
+    private var queryUserName: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            if (it.containsKey(ARG_USERNAME)) {
+                queryUserName = it.getString(ARG_USERNAME)
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,34 +49,36 @@ class UserDetailFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val progess = ProgressDialog(activity)
-        progess.setMessage(getString(R.string.userlist_activity_loading))
-        progess.setCancelable(false)
-        progess.show()
+        if (queryUserName != null) {
+            val progess = ProgressDialog(activity)
+            progess.setMessage(getString(R.string.userlist_activity_loading))
+            progess.setCancelable(false)
+            progess.show()
 
 
-        val respository = NetworkRepository.getInstance()
-        comDisposable.add(
-                respository
-                        .getUserDetail("defunkt")
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({
-                            result ->
-                            setupUserDetail(result)
+            val respository = NetworkRepository.getInstance()
+            comDisposable.add(
+                    respository
+                            .getUserDetail(queryUserName!!)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe({
+                                result ->
+                                setupUserDetail(result)
 
-                            progess.dismiss()
-                        }, {
-                            error ->
-                            error.printStackTrace()
+                                progess.dismiss()
+                            }, {
+                                error ->
+                                error.printStackTrace()
 
-                            progess.dismiss()
-                        })
-        )
+                                progess.dismiss()
+                            })
+            )
+        }
     }
 
 
-    fun setupUserDetail(userdetail:UserDetail) {
+    private fun setupUserDetail(userdetail:UserDetail) {
 
 
         user_avatar.setImageURL(userdetail.avatar_url)
@@ -81,5 +93,10 @@ class UserDetailFragment : Fragment() {
 
         user_location.text1.text = userdetail.location
         user_link.text1.text = userdetail.blog
+    }
+
+
+    companion object {
+        const val ARG_USERNAME = "user_name"
     }
 }

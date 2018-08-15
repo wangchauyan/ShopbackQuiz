@@ -15,7 +15,12 @@ class UserDetailActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            val fragment = UserDetailFragment()
+            val fragment = UserDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(UserDetailFragment.ARG_USERNAME,
+                            intent.getStringExtra(UserDetailFragment.ARG_USERNAME))
+                }
+            }
 
             supportFragmentManager.beginTransaction()
                     .add(R.id.user_detail_container, fragment)

@@ -99,13 +99,19 @@ class UserListActivity : AppCompatActivity() {
         init {
             onClickListener = View.OnClickListener { v ->
                 if (twoPane) {
-                    val fragment = UserDetailFragment()
+                    val fragment = UserDetailFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(UserDetailFragment.ARG_USERNAME, (v.tag as User).login)
+                        }
+                    }
                     parentActivity.supportFragmentManager
                             .beginTransaction()
                             .replace(R.id.user_detail_container, fragment)
                             .commit()
                 } else {
-                    val intent = Intent(v.context, UserDetailActivity::class.java)
+                    val intent = Intent(v.context, UserDetailActivity::class.java).apply {
+                        putExtra(UserDetailFragment.ARG_USERNAME, (v.tag as User).login)
+                    }
                     v.context.startActivity(intent)
                 }
             }
@@ -128,6 +134,7 @@ class UserListActivity : AppCompatActivity() {
                 holder.userRole.visibility = View.VISIBLE
 
             with(holder.itemView) {
+                tag = item
                 setOnClickListener(onClickListener)
             }
         }
