@@ -1,6 +1,9 @@
 package idv.chauyan.shopbackquiz
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -43,6 +46,46 @@ class UserListActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         toolbar.title = title
+
+        /**
+         * check if tablet devices
+         */
+        if (user_detail_container != null) {
+            // tablet devices
+            twoPane = true
+        }
+
+        /**
+         * setup UI components
+         */
+        setupUIs()
+
+
+        /**
+         * check network connectivity
+         */
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnected == true
+
+        if (isConnected) {
+            /**
+             * start getting first page - since = 0
+             */
+            queryUserList(false)
+        }
+
+    }
+
+    override fun onDestroy() {
+        comDisposable.clear()
+        super.onDestroy()
+    }
+
+    /**
+     * setup user list page UI components
+     */
+    private fun setupUIs() {
 
         /**
          * setup floating button
@@ -91,31 +134,12 @@ class UserListActivity : AppCompatActivity() {
         })
 
         user_list.adapter = UserListAdapter(this, twoPane)
-
-        /**
-         * check if tablet devices
-         */
-        if (user_detail_container != null) {
-            // tablet devices
-            twoPane = true
-        }
-
-        /**
-         * start getting first page - since = 0
-         */
-        queryUserList(false)
     }
 
-    override fun onDestroy() {
-        comDisposable.clear()
-        super.onDestroy()
-    }
-
+    /**
+     * query user list from github
+     */
     private fun queryUserList(bRefresh:Boolean) {
-
-        /**
-         * query user list from github
-         */
         val respository = NetworkRepository.getInstance()
         comDisposable.add(
                 respository
