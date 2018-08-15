@@ -12,23 +12,24 @@
     android:showDividers="middle"
     tools:context=".UserListActivity">
 
-    <!--
-    This layout is a two-pane layout for the Users
-    master/detail flow.
-    
-    -->
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/user_list"
-        android:name="idv.chauyan.shopbackquiz.UserListFragment"
-        android:layout_width="@dimen/item_width"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="idv.chauyan.shopbackquiz.UserListActivity"
-        tools:listitem="@layout/user_list_content" />
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_list"
+            android:name="idv.chauyan.shopbackquiz.UserListFragment"
+            android:layout_width="@dimen/item_width"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:layoutManager="LinearLayoutManager"
+            tools:context="idv.chauyan.shopbackquiz.UserListActivity"
+            tools:listitem="@layout/user_list_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
     <FrameLayout
         android:id="@+id/user_detail_container"

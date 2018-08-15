@@ -37,6 +37,9 @@ class UserListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = title
 
+        /**
+         * setup floating button
+         */
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Email me if you have any questions", Snackbar.LENGTH_LONG)
                     .setAction("Email", { _ ->
@@ -49,15 +52,42 @@ class UserListActivity : AppCompatActivity() {
                     }).show()
         }
 
+        /**
+         * setup refresh update gesture
+         */
+        refresh.setOnRefreshListener {
+            queryUserList(true)
+        }
+
+        /**
+         * check if tablet devices
+         */
         if (user_detail_container != null) {
             // tablet devices
             twoPane = true
         }
+    }
 
-        val progess = ProgressDialog(this)
-        progess.setMessage(getString(R.string.userlist_activity_loading))
-        progess.setCancelable(false)
-        progess.show()
+    override fun onResume() {
+        super.onResume()
+        queryUserList(false)
+    }
+
+    override fun onDestroy() {
+        comDisposable.clear()
+        super.onDestroy()
+    }
+
+    private fun queryUserList(bRefresh:Boolean) {
+
+        var progess:ProgressDialog? = null
+        if (!bRefresh) {
+            progess = ProgressDialog(this)
+            progess.setMessage(getString(R.string.userlist_activity_loading))
+            progess.setCancelable(false)
+            progess.show()
+        }
+
 
 
         /**
@@ -65,27 +95,29 @@ class UserListActivity : AppCompatActivity() {
          */
         val respository = NetworkRepository.getInstance()
         comDisposable.add(
-            respository
-                    .getUsers()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        result ->
-                        setupRecyclerView(user_list, result)
+                respository
+                        .getUsers()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({
+                            result ->
+                            setupRecyclerView(user_list, result)
 
-                        progess.dismiss()
-                    }, {
-                        error ->
-                        error.printStackTrace()
+                            if (!bRefresh)
+                                progess!!.dismiss()
+                            else
+                                refresh.isRefreshing = false
 
-                        progess.dismiss()
-                    })
+                        }, {
+                            error ->
+                            error.printStackTrace()
+
+                            if (!bRefresh)
+                                progess!!.dismiss()
+                            else
+                                refresh.isRefreshing = false
+                        })
         )
-    }
-
-    override fun onDestroy() {
-        comDisposable.clear()
-        super.onDestroy()
     }
 
     /**
