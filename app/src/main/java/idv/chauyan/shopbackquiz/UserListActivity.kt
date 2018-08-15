@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import idv.chauyan.shopbackquiz.model.User
 import idv.chauyan.shopbackquiz.repository.NetworkRepository
@@ -121,7 +120,7 @@ class UserListActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: UserView, position: Int) {
             val item = values[position]
             holder.userName.text = item.login
-            (holder.userAvatar as CircleImageView).setImageURL(item.avatar_url)
+            holder.userAvatar.setImageURL(item.avatar_url)
 
             if (!item.site_admin)
                 holder.userRole.visibility = View.GONE
@@ -136,7 +135,7 @@ class UserListActivity : AppCompatActivity() {
         override fun getItemCount() = values.size
 
         inner class UserView(view: View) : RecyclerView.ViewHolder(view) {
-            val userAvatar: ImageView = view.id_avatar
+            val userAvatar: CircleImageView = view.id_avatar
             val userName: TextView = view.id_name
             val userRole: TextView = view.id_role
         }

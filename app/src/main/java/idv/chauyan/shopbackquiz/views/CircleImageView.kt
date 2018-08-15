@@ -12,7 +12,6 @@ import idv.chauyan.shopbackquiz.R
 class CircleImageView : android.support.v7.widget.AppCompatImageView {
 
 
-    var drawRes: Drawable? = null
     var bitmap: Bitmap? = null
 
     var paint = Paint().apply {
@@ -36,9 +35,6 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
     }
 
     override fun onDraw(canvas: Canvas?) {
-        //super.onDraw(canvas)
-        if (drawable == null) return
-
         loadBitmap()
 
         if (bitmap == null) return
@@ -48,10 +44,8 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
     }
 
     fun loadBitmap() {
-        if (drawRes == drawable)
-            return
-        drawRes = drawable
-        bitmap = drawableToBitmap(drawRes)
+        if (drawable == null) return
+        bitmap = drawableToBitmap(drawable)
         updateShader()
     }
 
