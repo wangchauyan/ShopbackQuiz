@@ -21,6 +21,10 @@ class UserDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /**
+         * check if there's valid selected user name which means
+         * the selected user name is not null
+         */
         arguments?.let {
             if (it.containsKey(ARG_USERNAME)) {
                 queryUserName = it.getString(ARG_USERNAME)
@@ -36,6 +40,9 @@ class UserDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /**
+         * initialize view components
+         */
         user_profile.image.setImageResource(R.drawable.user_detail_login)
         user_location.image.setImageResource(R.drawable.user_detail_location)
         user_link.image.setImageResource(R.drawable.user_detail_blog)
@@ -56,6 +63,9 @@ class UserDetailFragment : Fragment() {
             progess.show()
 
 
+            /**
+             * query user detail information by passing selected user name
+             */
             val respository = NetworkRepository.getInstance()
             comDisposable.add(
                     respository
@@ -78,6 +88,9 @@ class UserDetailFragment : Fragment() {
     }
 
 
+    /**
+     * setup user detail information from github
+     */
     private fun setupUserDetail(userdetail:UserDetail) {
 
 

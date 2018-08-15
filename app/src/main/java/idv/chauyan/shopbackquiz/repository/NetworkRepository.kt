@@ -7,11 +7,16 @@ import io.reactivex.Observable
 
 
 class RetrofitRepository(val apiService : GithubApiService) {
+    /**
+     * outside api - get user list
+     */
     fun getUsers() : Observable<List<User>> {
         return apiService.users()
     }
 
-
+    /**
+     * outside api - get user detail information
+     */
     fun getUserDetail(username: String) : Observable<UserDetail> {
         return apiService.userDetail(username)
     }

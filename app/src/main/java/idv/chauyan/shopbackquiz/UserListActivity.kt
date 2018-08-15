@@ -60,6 +60,9 @@ class UserListActivity : AppCompatActivity() {
         progess.show()
 
 
+        /**
+         * query user list from github
+         */
         val respository = NetworkRepository.getInstance()
         comDisposable.add(
             respository
@@ -85,10 +88,16 @@ class UserListActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    /**
+     * setup user list
+     */
     private fun setupRecyclerView(recyclerView: RecyclerView, data: List<User>) {
         recyclerView.adapter = UserListAdapter(this, data, twoPane)
     }
 
+    /**
+     * setup user list adapter for recyclerview
+     */
     class UserListAdapter(private val parentActivity: UserListActivity,
                           private val values: List<User>,
                           private val twoPane: Boolean) :
@@ -99,6 +108,9 @@ class UserListActivity : AppCompatActivity() {
         init {
             onClickListener = View.OnClickListener { v ->
                 if (twoPane) {
+                    /**
+                     * pass selected user name to user detail fragment
+                     */
                     val fragment = UserDetailFragment().apply {
                         arguments = Bundle().apply {
                             putString(UserDetailFragment.ARG_USERNAME, (v.tag as User).login)
@@ -109,6 +121,9 @@ class UserListActivity : AppCompatActivity() {
                             .replace(R.id.user_detail_container, fragment)
                             .commit()
                 } else {
+                    /**
+                     * pass selected user name to user detail activity
+                     */
                     val intent = Intent(v.context, UserDetailActivity::class.java).apply {
                         putExtra(UserDetailFragment.ARG_USERNAME, (v.tag as User).login)
                     }

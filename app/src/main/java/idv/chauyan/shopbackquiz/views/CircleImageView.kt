@@ -18,14 +18,15 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
         isAntiAlias = true
     }
 
-
-
     constructor(context: Context) : super(context) {}
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
+    /**
+     * setup avatar_url from outside for getting user avatar
+     */
     fun setImageURL(url:String) {
         Picasso.get()
                 .load(url)
@@ -43,13 +44,19 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
         canvas.drawCircle(circleCenter, circleCenter, circleCenter, paint)
     }
 
-    fun loadBitmap() {
+    /**
+     * load bitmap from contained drawable object
+     */
+    private fun loadBitmap() {
         if (drawable == null) return
         bitmap = drawableToBitmap(drawable)
         updateShader()
     }
 
-    fun drawableToBitmap(drawable: Drawable?): Bitmap? {
+    /**
+     * convert drawable object to bitmap object
+     */
+    private fun drawableToBitmap(drawable: Drawable?): Bitmap? {
         if (drawable == null) return null
         if (drawable is BitmapDrawable) drawable.bitmap
 
@@ -68,7 +75,10 @@ class CircleImageView : android.support.v7.widget.AppCompatImageView {
         return null
     }
 
-    fun updateShader() {
+    /**
+     * create bitmap shader via passing loaded bitmap from self-owned drawable object
+     */
+    private fun updateShader() {
         if (bitmap == null) return
 
         val shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)

@@ -2,6 +2,9 @@ package idv.chauyan.shopbackquiz.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * data class for getting user detail information from github - api.github.com/users/:username
+ */
 data class UserDetail(
         @SerializedName("avatar_url") val avatar_url: String,
         @SerializedName("name") val name: String,

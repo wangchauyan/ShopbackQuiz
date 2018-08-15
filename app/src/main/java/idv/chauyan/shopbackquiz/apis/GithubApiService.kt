@@ -12,9 +12,15 @@ import retrofit2.http.Path
 
 interface GithubApiService {
 
+    /**
+     * get user list from github
+     */
     @GET("users")
     fun users(): Observable<List<User>>
 
+    /**
+     * query user detail information from github by using an exact user name
+     */
     @GET("users/{username}")
     fun userDetail(@Path("username") usserName:String): Observable<UserDetail>
 

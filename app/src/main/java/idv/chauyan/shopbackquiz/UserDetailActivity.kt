@@ -13,8 +13,9 @@ class UserDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_detail)
 
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
+            /**
+             * pass selected user name from user list page to user detail fragment
+             */
             val fragment = UserDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(UserDetailFragment.ARG_USERNAME,
